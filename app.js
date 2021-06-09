@@ -1,6 +1,22 @@
 const express = require('express');
+const mongoose = require('mongoose');
+const pageRoute = require('./routes/pageRoutes');
+const courseRoute = require('./routes/courseRoute');
+
 const app = express();
-const pageRouter = require('./routes/pageRoutes');
+
+//Connect DB
+mongoose
+  .connect('mongodb://localhost/smartedu-db', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+    useCreateIndex: true,
+  })
+  .then(() => {
+    console.log('DB Connected Successfully');
+  });
+
 //templat engine
 app.set('view engine', 'ejs');
 
@@ -8,7 +24,8 @@ app.set('view engine', 'ejs');
 app.use(express.static('public'));
 
 //Routes
-app.use('/', pageRouter);
+app.use('/', pageRoute);
+app.use('/courses', courseRoute);
 
 const port = 3000;
 app.listen(port, () => {
